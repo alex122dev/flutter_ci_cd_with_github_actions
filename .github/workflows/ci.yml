@@ -6,6 +6,7 @@ on:
 
 jobs:
   Run flutter test and analyze:
+    name: Run flutter test and analyze
     runs-on: ubuntu-latest
     
     steps:
@@ -15,7 +16,7 @@ jobs:
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        channel: ${{ env.FLUTTER_CHANNEL }}
+        channel: 'stable'
         # flutter-version: ${{ env.FLUTTER_VERSION }} # you can also specify exact version of flutter
 
     - name: Get pub dependencies
