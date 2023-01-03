@@ -4,7 +4,7 @@ on:
     branches: [ main ]
 
 jobs:
-  Run flutter test and analyze:
+  Run_flutter_test_and_analyze:
     name: Run flutter test and analyze
     runs-on: ubuntu-latest
     
