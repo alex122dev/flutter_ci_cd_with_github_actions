@@ -49,30 +49,43 @@ jobs:
   #       run: flutter build ios --release --no-codesign
 
 
-  build_android:
-    name: Build Flutter (Android)
+  # build_android:
+  #   name: Build Flutter (Android)
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v3
+  #     - name: Set up Flutter
+  #       uses: subosito/flutter-action@v2
+  #       with:
+  #         channel: 'stable'
+  #     - name: Build Android App
+  #       run: flutter build appbundle
+
+  #     - name: Upload artifact
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         path: build
+  #         name: android-build-files
+    
+  # deploy:
+  #   needs: build_android
+  #   runs-on: ubuntu-latest
+  #   steps: 
+  #     - name: Get build project
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: android-build-files
+
+  slack:
+    name: Send message to slack
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-      - name: Build Android App
-        run: flutter build appbundle
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          path: build
-          name: android-build-files
-    
-  deploy:
-    needs: build_android
-    runs-on: ubuntu-latest
-    steps: 
-      - name: Get build project
-        uses: actions/download-artifact@v3
-        with:
-          name: android-build-files
+      - name: Notification Slack
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: test
+          SLACK_TITLE: Post Title
+          SLACK_USERNAME: BotCI
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_MESSAGE: "This is your custom message."
