@@ -92,7 +92,7 @@ jobs:
 
   slack_second_var:
     name: Send message to slack
-    needs: build_android
+    # needs: build_android
     runs-on: ubuntu-latest
     steps:
       - name: Get build project
