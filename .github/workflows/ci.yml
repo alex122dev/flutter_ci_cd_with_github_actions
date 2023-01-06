@@ -52,13 +52,13 @@ jobs:
           name: ios-build-files
 
   save_ios_build:
-  needs: build_ios
-  runs-on: ubuntu-latest
-  steps: 
-    - name: Get build project
-      uses: actions/download-artifact@v3
-      with:
-        name: ios-build-files
+    needs: build_ios
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Get build project
+        uses: actions/download-artifact@v3
+        with:
+          name: ios-build-files
 
 
   build_android:
