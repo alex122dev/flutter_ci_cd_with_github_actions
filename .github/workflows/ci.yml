@@ -29,24 +29,36 @@ jobs:
 
 
 
-  # build_ios:
-  #   name: Build Flutter (iOS)
-  #   runs-on: macos-latest
+  build_ios:
+    name: Build Flutter (iOS)
+    runs-on: macos-latest
 
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-  #     - name: Set up Flutter
-  #       uses: subosito/flutter-action@v2
-  #       with:
-  #         channel: 'stable'
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
 
-  #     # - name: Get pub dependencies
-  #     #   run: flutter pub get
-  #     # - run: flutter clean
-  #     - name: Build IOS App
-  #       run: flutter build ios --release --no-codesign
+      - name: Build IOS App
+        run: flutter build ios --release --no-codesign
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          path: build
+          name: ios-build-files
+
+  save_ios_build:
+  needs: build_ios
+  runs-on: ubuntu-latest
+  steps: 
+    - name: Get build project
+      uses: actions/download-artifact@v3
+      with:
+        name: ios-build-files
 
 
   build_android:
@@ -68,7 +80,7 @@ jobs:
           path: build
           name: android-build-files
     
-  deploy:
+  save_android_build:
     needs: build_android
     runs-on: ubuntu-latest
     steps: 
@@ -92,14 +104,13 @@ jobs:
 
   slack_second_var:
     name: Send message to slack
-    needs: build_android
+    needs: [build_android, save_android_build, build_ios, save_ios_build]
     runs-on: ubuntu-latest
     steps:
       - name: Send custom JSON data to Slack workflow
         id: slack
         uses: slackapi/slack-github-action@v1.23.0
         with:
-          # For posting a rich message using Block Kit
           payload: |
             {
               "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
@@ -107,13 +118,3 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
-          # "blocks": [
-          #       {
-          #         "type": "section",
-          #         "text": {
-          #           "type": "mrkdwn",
-          #           "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}\n${{ steps.androidBuildId.outputs.download-path }}"
-          #         }
-          #       }
-          #     ]
