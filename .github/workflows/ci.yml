@@ -72,7 +72,7 @@ jobs:
         with:
           channel: 'stable'
       - name: Build Android App
-        run: flutter build appbundle
+        run: flutter build apk
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
