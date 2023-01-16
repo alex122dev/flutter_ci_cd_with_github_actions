@@ -4,16 +4,21 @@
 <dict>
     <key>compileBitcode</key>
     <true/>
-    <key>destination</key>
-    <string>export</string>
     <key>method</key>
-    <string>ad-hoc</string>
+    <string>app-store</string>
+    <key>provisioningProfiles</key>
+    <dict>
+        <key>your.bundle.identifier</key>
+        <string>Your Provisioning Profile Name</string>
+    </dict>
+    <key>signingCertificate</key>
+    <string>iOS Distribution</string>
     <key>signingStyle</key>
-    <string>automatic</string>
+    <string>manual</string>
     <key>stripSwiftSymbols</key>
     <true/>
     <key>teamID</key>
-    <string>/*This is my team ID*/</string>
+    <string>YourTeamId</string>
     <key>thinning</key>
     <string>&lt;none&gt;</string>
 </dict>
