@@ -29,65 +29,66 @@ jobs:
 
 
 
-  # build_ios:
-  #   name: Build Flutter (iOS)
-  #   runs-on: macos-latest
+  build_ios:
+    name: Build Flutter (iOS)
+    runs-on: macos-latest
 
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v3
-
-  #     - name: Set up Flutter
-  #       uses: subosito/flutter-action@v2
-  #       with:
-  #         channel: 'stable'
-
-  #     - name: Build IOS App
-  #       run: flutter build ios --release --no-codesign
-
-  #     - name: Upload artifact
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         path: build
-  #         name: ios-build-files
-
-  # save_ios_build:
-  #   needs: build_ios
-  #   runs-on: ubuntu-latest
-  #   steps: 
-  #     - name: Get build project
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: ios-build-files
-
-
-  build_android:
-    name: Build Flutter (Android)
-    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-      - name: Build Android App
-        run: flutter build apk
+
+      - name: Build IOS App
+        # run: flutter build ios --release --no-codesign
+        run: flutter build ipa --export-options-plist
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          path: build/app/outputs/flutter-apk/app-release.apk
-          name: android-build-files
-    
-  save_android_build:
-    needs: build_android
+          path: build
+          name: ios-build-files
+
+  save_ios_build:
+    needs: build_ios
     runs-on: ubuntu-latest
     steps: 
       - name: Get build project
         uses: actions/download-artifact@v3
         with:
-          name: android-build-files
+          name: ios-build-files
+
+
+  # build_android:
+  #   name: Build Flutter (Android)
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v3
+  #     - name: Set up Flutter
+  #       uses: subosito/flutter-action@v2
+  #       with:
+  #         channel: 'stable'
+  #     - name: Build Android App
+  #       run: flutter build apk
+
+  #     - name: Upload artifact
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         path: build/app/outputs/flutter-apk/app-release.apk
+  #         name: android-build-files
+    
+  # save_android_build:
+  #   needs: build_android
+  #   runs-on: ubuntu-latest
+  #   steps: 
+  #     - name: Get build project
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: android-build-files
 
   # slack:
   #   name: Send message to slack
